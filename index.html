@@ -143,7 +143,7 @@ th{padding:.65rem .7rem;text-align:left;font-size:.46rem;letter-spacing:.14em;te
 th:hover,th.sorted{color:var(--a2);}
 tbody tr{border-bottom:1px solid rgba(139,92,246,.06);transition:background .2s;}
 tbody tr:hover{background:rgba(139,92,246,.05);}
-tbody tr.nc{opacity:.5;}
+tbody tr.nc{opacity:.45;background:rgba(248,113,113,.03);}
 td{padding:.55rem .7rem;vertical-align:middle;}
 .tn{font-size:.64rem;color:var(--a2);}
 .tn a{color:inherit;text-decoration:none;}
@@ -159,6 +159,12 @@ td{padding:.55rem .7rem;vertical-align:middle;}
 .bno{display:inline-block;padding:.12rem .55rem;border-radius:50px;background:rgba(248,113,113,.08);color:var(--danger);border:1px solid rgba(248,113,113,.2);font-size:.44rem;letter-spacing:.1em;}
 .bbig{display:inline-block;padding:.1rem .38rem;border-radius:4px;background:rgba(251,191,36,.12);color:var(--warn);border:1px solid rgba(251,191,36,.25);font-size:.4rem;margin-left:.3rem;}
 .div-row td{background:rgba(139,92,246,.06);text-align:center;font-size:.48rem;letter-spacing:.15em;color:var(--dim);padding:.28rem;}
+.week-selector{display:flex;align-items:center;gap:.5rem;margin-bottom:1.2rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.7rem 1rem;}
+.week-lbl{font-size:.46rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-right:.4rem;}
+.wbtn{font-family:'DM Mono',monospace;font-size:.54rem;letter-spacing:.1em;padding:.4rem 1.1rem;border-radius:8px;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--muted);transition:all .25s;}
+.wbtn:hover{border-color:rgba(139,92,246,.4);color:var(--text);}
+.wbtn.on{border-color:var(--a2);color:var(--a2);background:rgba(139,92,246,.12);box-shadow:0 0 12px rgba(139,92,246,.15);}
+.week-badge{margin-left:auto;font-size:.5rem;color:var(--muted);}
 .sep{height:1px;background:linear-gradient(90deg,transparent,rgba(139,92,246,.2),transparent);margin:1.2rem 0;}
 /* STATUS PIPELINE */
 .status-bar{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem;}
@@ -234,18 +240,43 @@ td{padding:.55rem .7rem;vertical-align:middle;}
     <div class="sep"></div>
 
     <!-- SCENARIOS -->
+    <div class="week-selector">
+      <span class="week-lbl">📅 Vista</span>
+      <button class="wbtn on" onclick="setWeek('s1',this)">Semana 1 · 53 creators</button>
+      <button class="wbtn" onclick="setWeek('s2',this)">Semana 2 · 60 creators</button>
+      <button class="wbtn" onclick="setWeek('all',this)">🔗 Combinado · 113 · 97 a contactar</button>
+      <span class="week-badge" id="weekBadge">43 a contactar</span>
+    </div>
     <div class="scen-bar">
       <span class="scen-lbl">📊 CVR</span>
       <div class="scen-btns" id="scVentas">
-        <button class="sbtn" onclick="setScen('piso',this)">🟡 Piso</button>
-        <button class="sbtn on" onclick="setScen('mediana',this)">🟢 Mediana ★</button>
-        <button class="sbtn" onclick="setScen('techo',this)">🔵 Techo</button>
+        <button class="sbtn" onclick="setScen('piso',this)" title="Tercer video más bajo de cada creator × CVR conservador. El peor rendimiento recurrente.">🟡 Piso</button>
+        <button class="sbtn on" onclick="setScen('mediana',this)" title="Valor central de los 20 videos × CVR moderado. El día típico. El más confiable.">🟢 Mediana ★</button>
+        <button class="sbtn" onclick="setScen('techo',this)" title="Tercer video más alto de cada creator × CVR optimista. El mejor rendimiento recurrente.">🔵 Techo</button>
       </div>
       <span class="scen-lbl" style="margin-left:.8rem;">🤝 Creators que dicen SI</span>
       <div class="scen-btns" id="scAccept">
-        <button class="sbtn" onclick="setAccept(.25,this)">25% · ~11</button>
-        <button class="sbtn on" onclick="setAccept(.50,this)">50% · ~22 ★</button>
-        <button class="sbtn" onclick="setAccept(.75,this)">75% · ~32</button>
+        <button class="sbtn" onclick="setAccept(.10,this)">10% · ~10 🔴</button>
+        <button class="sbtn" onclick="setAccept(.25,this)">25% · ~24</button>
+        <button class="sbtn on" onclick="setAccept(.50,this)">50% · ~48 ★</button>
+        <button class="sbtn" onclick="setAccept(.75,this)">75% · ~72</button>
+        <button class="sbtn" onclick="setAccept(1.00,this)">100% · ~97 🔵</button>
+      </div>
+    </div>
+
+    <!-- SCENARIO NOTE -->
+    <div style="display:flex;gap:1.5rem;flex-wrap:wrap;margin-bottom:.8rem;padding:.6rem 1rem;background:rgba(139,92,246,.04);border:1px solid rgba(139,92,246,.1);border-radius:8px;">
+      <div style="font-size:.5rem;color:var(--muted);line-height:1.7;">
+        <span style="color:var(--warn);font-weight:500;">🟡 Piso</span> — 3er video más bajo de cada creator × CVR conservador. Peor rendimiento recurrente.
+      </div>
+      <div style="font-size:.5rem;color:var(--muted);line-height:1.7;">
+        <span style="color:var(--ok);font-weight:500;">🟢 Mediana ★</span> — Valor central de 20 videos × CVR moderado. El día típico. El más confiable para proyectar.
+      </div>
+      <div style="font-size:.5rem;color:var(--muted);line-height:1.7;">
+        <span style="color:#60a5fa;font-weight:500;">🔵 Techo</span> — 3er video más alto × CVR optimista. Mejor rendimiento recurrente. No es el viral, es su mejor día normal.
+      </div>
+      <div style="font-size:.5rem;color:var(--dim);line-height:1.7;border-top:1px solid var(--border);padding-top:.4rem;width:100%;">
+        ⚠️ Los números grandes en Piso se explican porque algunos creators tienen pisos altos en views (ej. alice.journeyy tiene piso de 117,000 views). El CVR es conservador pero los views base son los suyos reales.
       </div>
     </div>
 
@@ -298,9 +329,18 @@ td{padding:.55rem .7rem;vertical-align:middle;}
       </div>
       <div class="pnl-right">
         <div class="pnl-mt">Pipeline</div>
-        <div class="pnl-mr"><span>Prospects totales</span><span id="pr1">54</span></div>
-        <div class="pnl-mr"><span>A contactar</span><span class="pos" id="pr2">—</span></div>
-        <div class="pnl-mr"><span>Descartados</span><span class="neg" id="pr3">—</span></div>
+        <div class="pnl-mr"><span>Prospects analizados</span><span id="pr1">—</span></div>
+        <div class="pnl-mr"><span>✅ A contactar</span><span class="pos" id="pr2">—</span></div>
+        <div class="pnl-mr"><span>— Descartados</span><span class="neg" id="pr3">—</span></div>
+        <div class="pnl-mr" style="border-top:1px solid var(--border);margin-top:.3rem;padding-top:.3rem;">
+          <span style="font-size:.48rem;color:var(--dim);">S1 prospectados</span><span style="font-size:.52rem;color:var(--muted);" id="prS1">54 · 43 contactar</span>
+        </div>
+        <div class="pnl-mr">
+          <span style="font-size:.48rem;color:var(--dim);">S2 prospectados</span><span style="font-size:.52rem;color:var(--muted);" id="prS2">62 · 54 contactar</span>
+        </div>
+        <div class="pnl-mr">
+          <span style="font-size:.48rem;color:var(--dim);">Total combinado</span><span style="font-size:.52rem;color:var(--a2);font-weight:500;" id="prTotal">116 · 97 contactar</span>
+        </div>
         <div class="pdiv"></div>
         <div class="pnl-mt">Supuestos</div>
         <div class="pnl-mr"><span>Precio al buyer</span><span>$69 USD</span></div>
@@ -318,25 +358,61 @@ td{padding:.55rem .7rem;vertical-align:middle;}
     <div class="matrix">
       <div class="mx-card mx-p">
         <div class="mx-lbl">🟡 Piso (conservative CVR)</div>
+        <div class="mx-row"><span class="mx-rl">Ultra pesimista (10%)</span><div><span class="mx-rv" id="mup">—</span><span class="mxn-tag" id="xmup"></span></div></div>
         <div class="mx-row"><span class="mx-rl">Pesimista (25%)</span><div><span class="mx-rv" id="mpp">—</span><span class="mxn-tag" id="xmpp"></span></div></div>
-        <div class="mx-row"><span class="mx-rl">Realista (50%)</span><div><span class="mx-rv" id="mrp">—</span><span class="mxn-tag" id="xmrp"></span></div></div>
+        <div class="mx-row"><span class="mx-rl">Realista (50%) ★</span><div><span class="mx-rv" id="mrp">—</span><span class="mxn-tag" id="xmrp"></span></div></div>
         <div class="mx-row"><span class="mx-rl">Optimista (75%)</span><div><span class="mx-rv" id="mop">—</span><span class="mxn-tag" id="xmop"></span></div></div>
+        <div class="mx-row"><span class="mx-rl">Utópico (100%)</span><div><span class="mx-rv" id="mxp">—</span><span class="mxn-tag" id="xmxp"></span></div></div>
       </div>
       <div class="mx-card mx-m">
         <div class="mx-lbl">🟢 Mediana · Base scenario</div>
+        <div class="mx-row"><span class="mx-rl">Ultra pesimista (10%)</span><div><span class="mx-rv" id="mum">—</span><span class="mxn-tag" id="xmum"></span></div></div>
         <div class="mx-row"><span class="mx-rl">Pesimista (25%)</span><div><span class="mx-rv" id="mpm">—</span><span class="mxn-tag" id="xmpm"></span></div></div>
         <div class="mx-row"><span class="mx-rl">Realista (50%) ★</span><div><span class="mx-rv" id="mrm">—</span><span class="mxn-tag" id="xmrm"></span></div></div>
         <div class="mx-row"><span class="mx-rl">Optimista (75%)</span><div><span class="mx-rv" id="mom">—</span><span class="mxn-tag" id="xmom"></span></div></div>
+        <div class="mx-row"><span class="mx-rl">Utópico (100%)</span><div><span class="mx-rv" id="mxm">—</span><span class="mxn-tag" id="xmxm"></span></div></div>
         <div class="mx-badge">Working base</div>
       </div>
       <div class="mx-card mx-t">
         <div class="mx-lbl">🔵 Techo (optimistic CVR)</div>
+        <div class="mx-row"><span class="mx-rl">Ultra pesimista (10%)</span><div><span class="mx-rv" id="mut">—</span><span class="mxn-tag" id="xmut"></span></div></div>
         <div class="mx-row"><span class="mx-rl">Pesimista (25%)</span><div><span class="mx-rv" id="mpt">—</span><span class="mxn-tag" id="xmpt"></span></div></div>
         <div class="mx-row"><span class="mx-rl">Realista (50%)</span><div><span class="mx-rv" id="mrt">—</span><span class="mxn-tag" id="xmrt"></span></div></div>
         <div class="mx-row"><span class="mx-rl">Optimista (75%)</span><div><span class="mx-rv" id="mot">—</span><span class="mxn-tag" id="xmot"></span></div></div>
+        <div class="mx-row"><span class="mx-rl">Utópico (100%)</span><div><span class="mx-rv" id="mxt">—</span><span class="mxn-tag" id="xmxt"></span></div></div>
       </div>
     </div>
     <div class="sep"></div>
+
+    <!-- CVR CARDS -->
+    <div class="sec-title">CVR — Tasa de Conversión por Engagement</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;margin-bottom:1.2rem;">
+
+      <div style="background:rgba(110,231,183,.06);border:1px solid rgba(110,231,183,.25);border-radius:10px;padding:.9rem 1rem;">
+        <div style="font-size:.44rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ok);margin-bottom:.4rem;">Ratio &gt;80% · CVR 1.0%</div>
+        <div style="font-family:'Playfair Display',serif;font-weight:700;font-style:italic;font-size:1.5rem;color:var(--ok);margin-bottom:.3rem;">1.0%</div>
+        <div style="font-size:.52rem;color:var(--muted);line-height:1.6;">Audiencia muy activa. Views superan seguidores. BookTok puro. De cada 1,000 views → <strong style="color:var(--ok);">10 ventas</strong></div>
+      </div>
+
+      <div style="background:rgba(167,139,250,.06);border:1px solid rgba(167,139,250,.25);border-radius:10px;padding:.9rem 1rem;">
+        <div style="font-size:.44rem;letter-spacing:.15em;text-transform:uppercase;color:var(--a2);margin-bottom:.4rem;">Ratio 50–80% · CVR 0.8% ★</div>
+        <div style="font-family:'Playfair Display',serif;font-weight:700;font-style:italic;font-size:1.5rem;color:var(--a2);margin-bottom:.3rem;">0.8%</div>
+        <div style="font-size:.52rem;color:var(--muted);line-height:1.6;">BookTok activo, review auténtica. Escenario base. De cada 1,000 views → <strong style="color:var(--a2);">8 ventas</strong></div>
+      </div>
+
+      <div style="background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.2);border-radius:10px;padding:.9rem 1rem;">
+        <div style="font-size:.44rem;letter-spacing:.15em;text-transform:uppercase;color:var(--warn);margin-bottom:.4rem;">Ratio 20–50% · CVR 0.5%</div>
+        <div style="font-family:'Playfair Display',serif;font-weight:700;font-style:italic;font-size:1.5rem;color:var(--warn);margin-bottom:.3rem;">0.5%</div>
+        <div style="font-size:.52rem;color:var(--muted);line-height:1.6;">Nicho mixto, lifestyle, primer video afiliado. De cada 1,000 views → <strong style="color:var(--warn);">5 ventas</strong></div>
+      </div>
+
+      <div style="background:rgba(248,113,113,.06);border:1px solid rgba(248,113,113,.2);border-radius:10px;padding:.9rem 1rem;">
+        <div style="font-size:.44rem;letter-spacing:.15em;text-transform:uppercase;color:var(--danger);margin-bottom:.4rem;">Ratio &lt;20% · CVR 0.1%</div>
+        <div style="font-family:'Playfair Display',serif;font-weight:700;font-style:italic;font-size:1.5rem;color:var(--danger);margin-bottom:.3rem;">0.1%</div>
+        <div style="font-size:.52rem;color:var(--muted);line-height:1.6;">Audiencia fría, seguidores acumulados, poco engagement. De cada 1,000 views → <strong style="color:var(--danger);">1 venta</strong></div>
+      </div>
+
+    </div>
 
     <!-- TABLE -->
     <div class="sec-title">Creator Roster</div>
@@ -354,9 +430,9 @@ td{padding:.55rem .7rem;vertical-align:middle;}
     <div class="controls">
       <input class="search" id="srch" placeholder="Search creator..." oninput="renderTable()">
       <div class="fpills">
-        <button class="fp on" onclick="setFilt('all',this)">All</button>
-        <button class="fp" onclick="setFilt('si',this)">SI only</button>
-        <button class="fp" onclick="setFilt('no',this)">NO only</button>
+        <button class="fp on" onclick="setFilt('all',this)">Todos</button>
+        <button class="fp" onclick="setFilt('si',this)">✅ A contactar</button>
+        <button class="fp" onclick="setFilt('no',this)">— Descartados</button>
         <button class="fp" onclick="setFilt('big',this)">500K+</button>
         <button class="fp" onclick="setFilt('high',this)">Ratio 80%+</button>
       </div>
@@ -383,6 +459,21 @@ td{padding:.55rem .7rem;vertical-align:middle;}
       </table>
     </div>
     <div class="sep"></div>
+
+    <!-- PROSPECTING EFFECTIVENESS -->
+    <div id="prospEffWrap" style="margin-bottom:1rem;padding:1rem 1.4rem;background:var(--surface);border:1px solid var(--border);border-radius:12px;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;">
+      <div>
+        <div style="font-size:.46rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem;">📊 Efectividad de prospección</div>
+        <div style="font-size:.58rem;color:var(--muted);" id="prospDesc">— de — prospects pasan el corte</div>
+      </div>
+      <div style="flex:1;min-width:140px;">
+        <div style="height:10px;border-radius:50px;background:var(--dim);overflow:hidden;">
+          <div id="prospBar" style="height:100%;background:linear-gradient(90deg,var(--ok),var(--a2));border-radius:50px;transition:width .6s ease;width:0%;"></div>
+        </div>
+      </div>
+      <div style="font-family:'Playfair Display',serif;font-weight:700;font-style:italic;font-size:2rem;color:var(--ok);" id="prospPct">—%</div>
+      <div style="font-size:.52rem;color:var(--muted);line-height:1.6;max-width:200px;">de los prospects analizados tienen potencial suficiente para justificar el outreach</div>
+    </div>
 
     <!-- STATUS TRACKING -->
     <div class="sec-title">Pipeline Status Tracker</div>
@@ -458,7 +549,8 @@ td{padding:.55rem .7rem;vertical-align:middle;}
 <script>
 var PW = 'a';
 var DATA = [];
-var sortKey = 'v_med', sortDir = -1, filtMode = 'si', srchQ = '';
+var currentWeek = 's1';
+var sortKey = 'v_med', sortDir = -1, filtMode = 'all', srchQ = '';
 var scen = 'mediana', accept = 0.50;
 var mxnOn = false;
 var savedSheets = [];
@@ -520,6 +612,70 @@ var RAW = [
   ['marleybooks',439500,237250,112200,411300,53.98]
 ];
 
+var RAW_S2 = [
+  ['tori.ugc',1993,717,305,5092,35.95],
+  ['lifewithkelsey2',16300,14550,5678,58800,89.26],
+  ['letsgogirl_423',1438,1193,569,13500,82.93],
+  ['lauracolombox',44500,8187,3583,19300,18.40],
+  ['regina_ugc_',32500,11250,7966,17200,34.62],
+  ['ugcsitora_',3831,2426,1433,4364,63.33],
+  ['hannahelizzzy',22100,47250,23600,95200,213.80],
+  ['anastasiiadiary',83600,56150,32700,397000,67.17],
+  ['oliviaakoo',71500,18150,11500,42100,25.38],
+  ['siwi.sof',4044,5272,1652,107000,130.35],
+  ['isabellagerli',40900,6636,4939,10700,16.22],
+  ['itskruella',2680,1853,786,8309,69.14],
+  ['alice.journeyy',233000,226500,117000,1000000,97.21],
+  ['_.amaaalia',2439,5970,2585,109000,244.77],
+  ['maardemariel',170,378,248,1679,222.35],
+  ['aysuerdemm',26000,9571,2767,40000,36.81],
+  ['maiitoyoda',78600,26400,3969,58200,33.59],
+  ['conamorisaa',17600,3756,1699,8840,21.34],
+  ['vickyyvalero',5352,1333,992,606400,24.90],
+  ['emdl.gt',3692,968,733,2812,26.21],
+  ['paulaasanchezugc',1439,934,507,21200,64.87],
+  ['contentwithcarina',8615,2465,1391,107300,28.61],
+  ['bymikaylalynn',2249,3034,1543,11100,134.88],
+  ['nia.diaryy',45700,10400,7244,14200,22.76],
+  ['caeleenrwal',267,1875,1012,4130,702.06],
+  ['heyits.sofia',5445,1794,1177,4486,32.94],
+  ['samiksha.av',8358,16100,8736,85700,192.63],
+  ['val.barahonaa',1008,699,426,1535,69.35],
+  ['overthynker',9175,15900,5683,220000,173.30],
+  ['emubreathesinpages',126000,53150,15200,386000,42.18],
+  ['johensoto',2064,2176,1492,3618,105.40],
+  ['propositoconauri',11800,2097,1489,12100,17.77],
+  ['cellfstudies',68400,98250,32900,332000,143.64],
+  ['lauraruizmartn',4185,4349,1968,7485,103.91],
+  ['keanareads',7350,6656,3415,24200,90.56],
+  ['jeans.scenes',70900,41250,21500,498000,58.18],
+  ['arabellatouchstone',40300,26700,7933,233000,66.25],
+  ['__ahsein',786,126,0,1888,15.97],
+  ['carlotapiney',6784,23750,16800,104000,350.09],
+  ['beccamariawatson',28500,9378,7282,20900,32.90],
+  ['aletruebaa',17000,36600,13900,104000,215.29],
+  ['chizzzhova',15100,10550,7542,41200,69.87],
+  ['sonyagrows',2162,1886,691,3564,87.23],
+  ['carolinegardner.spt',78300,22900,12200,78100,29.25],
+  ['federicaabegnoni',19100,8283,3577,50700,43.36],
+  ['megs.reading',7551,4233,1421,25700,56.05],
+  ['estielikesberry',29700,10650,7988,31700,35.86],
+  ['rebcaramo.s',43900,45450,17300,338000,103.53],
+  ['fati_polyglot',6899,6261,2868,28600,90.75],
+  ['jes.spresso',8248,16600,7131,45800,201.26],
+  ['libraryofcarlyk',6859,4563,2419,7670,66.52],
+  ['dastags',5698,26000,7772,143000,456.30],
+  ['melanieeong',9741,8861,5681,114000,90.96],
+  ['parudiaries',25400,37950,6756,387000,149.41],
+  ['elisabetgomezp',34500,12550,8601,32700,36.38],
+  ['hannahmariefellows',6248,17500,6748,47300,280.09],
+  ['andrea.lyfe',7515,3506,1344,16700,46.65],
+  ['hotgirlsreadlitfic',18400,10900,7629,114000,59.24],
+  ['rayareadsalot',749,280,231,601,37.38],
+  ['hannaheyerman',38400,59950,37700,201000,156.12]
+];
+var RAW_COMBINED = RAW.concat(RAW_S2);
+
 function cvr(r){ return r>=80?.010:r>=50?.008:r>=20?.005:.001; }
 function cvrL(r){ return r>=80?'1.0%':r>=50?'0.8%':r>=20?'0.5%':'0.1%'; }
 function comLabel(f){ return f>=500000?'$15→$22':'$15 fixed'; }
@@ -557,8 +713,41 @@ function buildData(raw) {
 }
 
 function updateStats(yes,total) {
-  var el=document.getElementById('pr2'); if(el) el.textContent=yes.length;
-  var el2=document.getElementById('pr3'); if(el2) el2.textContent=(total-yes.length);
+  var n=yes.length;
+  var el=document.getElementById('pr1'); if(el) el.textContent=total;
+  var el2=document.getElementById('pr2'); if(el2) el2.textContent=n;
+  var el3=document.getElementById('pr3'); if(el3) el3.textContent=(total-n);
+  var wb=document.getElementById('weekBadge'); if(wb) wb.textContent=n+' a contactar · '+total+' analizados';
+  // acceptance scenarios
+  var accs=[['.10','pacc10'],['.25','pacc25'],['.50','pacc50'],['.75','pacc75'],['1.00','pacc100']];
+  var pcts=[.10,.25,.50,.75,1.00];
+  pcts.forEach(function(pct,i){
+    var nc=Math.round(n*pct);
+    var el=document.getElementById(accs[i][1]);
+    if(el) el.textContent='~'+nc+' creators';
+  });
+  // fixed combined totals
+  var prS1=document.getElementById('prS1'); if(prS1) prS1.textContent='54 · 43 a contactar';
+  var prS2=document.getElementById('prS2'); if(prS2) prS2.textContent='62 · 54 a contactar';
+  var prTotal=document.getElementById('prTotal'); if(prTotal) prTotal.textContent='113 · 97 a contactar';
+  // subtitle
+  var ds=document.getElementById('dsub');
+  if(ds){
+    var wlbl=currentWeek==='s1'?'Semana 1 · 53 prospects · 43 a contactar':currentWeek==='s2'?'Semana 2 · 60 prospects · 54 a contactar':'Combinado · 113 analizados · 97 a contactar';
+    ds.textContent=wlbl+' · verified by Mayis · June 2026';
+  }
+  // prospecting effectiveness
+  var pct=total>0?Math.round((n/total)*100):0;
+  var pctEl=document.getElementById('prospPct'); if(pctEl) pctEl.textContent=pct+'%';
+  var barEl=document.getElementById('prospBar'); if(barEl) barEl.style.width=pct+'%';
+  var descEl=document.getElementById('prospDesc');
+  if(descEl) descEl.textContent=n+' de '+total+' prospects pasan el corte mínimo de 5 ventas estimadas en mediana';
+  // color bar by effectiveness
+  if(barEl){
+    if(pct>=80) barEl.style.background='linear-gradient(90deg,var(--ok),var(--a2))';
+    else if(pct>=60) barEl.style.background='linear-gradient(90deg,var(--warn),var(--ok))';
+    else barEl.style.background='linear-gradient(90deg,var(--danger),var(--warn))';
+  }
 }
 
 var matrixVals = {};
@@ -635,7 +824,7 @@ function updateMXN() {
     }
   });
   // Matrix MXN tags
-  var mxIds=['mpp','mrp','mop','mpm','mrm','mom','mpt','mrt','mot'];
+  var mxIds=['mup','mpp','mrp','mop','mxp','mum','mpm','mrm','mom','mxm','mut','mpt','mrt','mot','mxt'];
   mxIds.forEach(function(id){
     var el=document.getElementById('x'+id);if(!el)return;
     if(on&&matrixVals[id]!==undefined){
@@ -658,6 +847,14 @@ function updateMXN() {
   }
 }
 
+function setWeek(w,btn){
+  currentWeek=w;
+  document.querySelectorAll('.wbtn').forEach(function(b){b.classList.remove('on');});
+  btn.classList.add('on');
+  var raw = w==='s1'?RAW:w==='s2'?RAW_S2:RAW_COMBINED;
+  buildData(raw);
+  renderStatusTable();
+}
 function setScen(s,btn){
   scen=s;
   document.querySelectorAll('#scVentas .sbtn').forEach(function(b){b.classList.remove('on');});
@@ -722,7 +919,7 @@ function renderTable(){
     if(!r.contact) tr.className='nc';
     var cells=[
       '<td class="tp">'+(r.priority?'#'+r.priority:'—')+'</td>',
-      '<td class="tn"><a href="https://instagram.com/'+r.name+'" target="_blank">@'+r.name+'</a>'+big+'</td>',
+      '<td class="tn">'+(r.contact?'':'<span style="text-decoration:line-through;opacity:.5;">')+'<a href="https://instagram.com/'+r.name+'" target="_blank">@'+r.name+'</a>'+big+(r.contact?'':'</span>')+'</td>',
       '<td>'+fmtK(r.followers)+'</td>',
       '<td>'+fmtN(r.mediana)+'</td>',
       '<td class="'+rc+'">'+r.ratio.toFixed(0)+'%</td>',
